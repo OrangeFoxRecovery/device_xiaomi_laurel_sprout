@@ -42,7 +42,8 @@ PRODUCT_PACKAGES_DEBUG += \
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH)
+    $(LOCAL_PATH) \
+    hardware/qcom-caf/bootctrl
   
 # QCOM Decryption
 PRODUCT_PACKAGES += \
