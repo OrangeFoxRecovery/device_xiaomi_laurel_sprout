@@ -81,6 +81,14 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_VERSION="R12.1"
 	export OF_MAINTAINER="RealAkira"
 
+       # necessary to decrypt most violet ROMs
+       export OF_FIX_DECRYPTION_ON_DATA_MEDIA=1
+
+       # disable wrappedkey?
+       if [ "$OF_DISABLE_WRAPPEDKEY" = "1" ]; then
+	  export FOX_VARIANT="unwrap"
+       fi
+
 	# let's see what are our build VARs
 	if [ -n "$FOX_BUILD_LOG_FILE" -a -f "$FOX_BUILD_LOG_FILE" ]; then
   	   export | grep "FOX" >> $FOX_BUILD_LOG_FILE
