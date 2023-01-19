@@ -38,7 +38,10 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
    	export TW_DEFAULT_LANGUAGE="en"
 	export LC_ALL="C"
  	export ALLOW_MISSING_DEPENDENCIES=true
-	export TARGET_DEVICE_ALT="laurel_sprout"
+ 	export FOX_ENABLE_APP_MANAGER=1
+ 	export OF_IGNORE_LOGICAL_MOUNT_ERRORS=1
+ 	export TARGET_DEVICE="laurel_sprout"
+	export TARGET_DEVICE_ALT="MI A3"
 	export OF_AB_DEVICE=1
 	export OF_USE_GREEN_LED=0
 	export OF_FBE_METADATA_MOUNT_IGNORE=1
@@ -55,7 +58,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_USE_SED_BINARY=1
 	export FOX_USE_XZ_UTILS=1
 	export OF_SKIP_MULTIUSER_FOLDERS_BACKUP=1
-    	export OF_QUICK_BACKUP_LIST="/boot;/data;"
+    export OF_QUICK_BACKUP_LIST="/boot;/data;"
 	export OF_PATCH_AVB20=1
     	export FOX_DELETE_AROMAFM=1
     	export FOX_BUGGED_AOSP_ARB_WORKAROUND="1546300800"; # Tuesday, January 1, 2019 12:00:00 AM GMT+00:00
@@ -68,26 +71,40 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     	export OF_FIX_OTA_UPDATE_MANUAL_FLASH_ERROR=1
     	export OF_DISABLE_MIUI_OTA_BY_DEFAULT=1
 
-	# Screen Settings
-	export OF_SCREEN_H=2400
-	export OF_STATUS_H=80
-	export OF_STATUS_INDENT_LEFT=48
-	export OF_STATUS_INDENT_RIGHT=48
-	export OF_CLOCK_POS=1
-	export OF_HIDE_NOTCH=1
-	export OF_ALLOW_DISABLE_NAVBAR=0
+	    # Screen Settings
+	   export OF_SCREEN_H=2400
+	   export OF_STATUS_H=80
+	   export OF_STATUS_INDENT_LEFT=40
+	   export OF_STATUS_INDENT_RIGHT=40
+	   export OF_CLOCK_POS=1
+	   export OF_HIDE_NOTCH=1
+	   export OF_ALLOW_DISABLE_NAVBAR=0
 
-	# R11.1 Settings
-	export FOX_VERSION="R12.1"
-	export OF_MAINTAINER="RealAkira"
+	  # R11.1 Settings
+	  export FOX_VERSION="R12.1"
+	  export OF_MAINTAINER="PowerX-NOT & Noctowl709"
+	  export FOX_BUILD_TYPE="Beta"
+	
 
-       # necessary to decrypt most violet ROMs
+       # necessary to decrypt most laurel_sprout ROMs
        export OF_FIX_DECRYPTION_ON_DATA_MEDIA=1
 
        # disable wrappedkey?
        if [ "$OF_DISABLE_WRAPPEDKEY" = "1" ]; then
 	  export FOX_VARIANT="unwrap"
        fi
+       
+       # Magisk
+	if [ -n "${FOX_USE_SPECIFIC_MAGISK_ZIP}" ]; then
+		if [ ! -e "${FOX_USE_SPECIFIC_MAGISK_ZIP}" ]; then
+			echo "Downloading the Latest Release of Magisk..."
+			LATEST_MAGISK_URL="$(curl -sL https://api.github.com/repos/topjohnwu/Magisk/releases/latest | grep browser_download_url | grep Magisk- | cut -d : -f 2,3 | sed 's/"//g')"
+			mkdir -p $(dirname ${FOX_USE_SPECIFIC_MAGISK_ZIP})
+			wget ${LATEST_MAGISK_URL} -O ${FOX_USE_SPECIFIC_MAGISK_ZIP} 2>/dev/null
+			[ "$?" = "0" ] && echo "Magisk Downloaded Successfully"
+			echo "Done!"
+		fi
+	fi
 
 	# let's see what are our build VARs
 	if [ -n "$FOX_BUILD_LOG_FILE" -a -f "$FOX_BUILD_LOG_FILE" ]; then
